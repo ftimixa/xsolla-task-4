@@ -141,36 +141,44 @@ cities.map(city => {
 })
 
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-months.map((month, index) => {
+months.map((month) => {
     const selectMonth = document.getElementById('month');
-    const optionMonth = `<option value="0${index}">${month}</option>`
+    const optionMonth = `<option value="${month}">${month}</option>`
     selectMonth.insertAdjacentHTML('beforeend', optionMonth)
 })
 
-const createCardChange = (arrayEvents) => {
-    arrayEvents.map(({id, name, date, city, image}) => {
-        const cardChange_flexbox = document.querySelector(".cardChange-flexbox");
-        const cardChange_item = `<div id="${id}" data-city="${city}" class="cardChange-item favourite">
-                                    <img src="${image}" alt="${name}">
-                                    <time><span>${date.slice(0, 2)}</span></time>
-                                    <h2>${name}</h2>
-                                </div>`;
-        cardChange_flexbox.insertAdjacentHTML("beforeend", cardChange_item)
-    })
-}
+eventsData.map(({id, name, date, city, image}) => {
+    const card_flexbox = document.querySelector(".card-flexbox");
+    const card_item = `<div id="${id}" data-month="${months[date.slice(3,5).replace('0', '') - 1]}" data-city="${city}" class="card-item favourite">
+                                <img src="${image}" alt="${name}">
+                                <time><span>${date.slice(0, 2)}</span></time>
+                                <h2>${name}</h2>
+                            </div>`;
+    card_flexbox.insertAdjacentHTML("beforeend", card_item);
+})
 
-createCardChange(eventsData)
-
-const searchCity = (value) => {
-        document.querySelectorAll('.cardChange-item').forEach(cardItem => cardItem.remove())
-        for(let i = 0; i < cities.length; i++) {
-            if(value === 'All') {
-                return createCardChange(eventsData)
-            } else if(value === cities[i]) {
-                const eventsFilter = eventsData.filter(({city}) => city === value)
-                return createCardChange(eventsFilter)
-            }
+const events = document.querySelectorAll('.card-item');
+const filterCity = document.getElementById('city');
+filterCity.onchange = () => {
+    for(let event of events) {
+        if(event.dataset.city !== filterCity.value && filterCity.value !== 'All') {
+            event.classList.add('hiddenC')
+        } else {
+            event.classList.remove('hiddenC')
         }
+    }
 }
+
+const filterMonth = document.getElementById('month');
+filterMonth.onchange = () => {
+    for(let event of events) {
+        if(event.dataset.month !== filterMonth.value && filterMonth.value !== 'All') {
+            event.classList.add('hiddenM')
+        } else {
+            event.classList.remove('hiddenM')
+        }
+    }
+}
+
 
 
